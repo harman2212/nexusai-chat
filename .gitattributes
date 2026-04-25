@@ -1,0 +1,36 @@
+# GitHub Linguist - Language detection overrides
+
+# Prisma schema → show as separate language
+prisma/schema.prisma linguist-language=Prisma
+
+# JavaScript files
+postcss.config.mjs linguist-language=JavaScript
+
+# TypeScript files
+next.config.ts linguist-language=TypeScript
+
+# CSS files
+src/app/globals.css linguist-language=CSS
+
+# Markdown → always show in language stats
+*.md linguist-documentation=true
+README.md linguist-language=Markdown
+
+# JSON config files → show, don't hide as vendored
+package.json linguist-vendored=false
+package-lock.json linguist-generated=false
+tsconfig.json linguist-vendored=false
+next.config.ts linguist-vendored=false
+postcss.config.mjs linguist-vendored=false
+tailwind.config.ts linguist-vendored=false
+
+# SVG → show as XML/SVG
+public/*.svg linguist-language=SVG
+
+# Prisma client → don't count generated code
+node_modules/@prisma/** linguist-generated=true
+node_modules/.prisma/** linguist-generated=true
+
+# Ignore generated/build files
+.next/** linguist-generated=true
+dist/** linguist-generated=true

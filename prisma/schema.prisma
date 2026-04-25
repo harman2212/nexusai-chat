@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String         @id @default(cuid())
+  email     String         @unique
+  name      String?
+  image     String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  accounts  Account[]
+  conversations Conversation[]
+}
+
+model Account {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider     String   @default("credentials")
+  passwordHash String?
+  createdAt    DateTime @default(now())
+}
+
+model Conversation {
+  id             String       @id @default(cuid())
+  title          String       @default("New Chat")
+  model          String       @default("default")
+  systemPrompt   String       @default("")
+  userId         String       @default("")
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  messages       Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  role           String
+  content        String
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+}
+
+// ── Analytics — optional table, create with: npx prisma db push ──
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  userId    String?
+  eventType String
+  model     String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@map("analytics_events")
+  @@index([eventType])
+  @@index([createdAt])
+}
